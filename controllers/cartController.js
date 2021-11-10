@@ -5,9 +5,8 @@ const PAGE_LIMIT = 10;
 const PAGE_OFFSET = 0;
 
 let cartController = {
-  getCart: (req, res) => {
-    return Cart.findByPk(req.session.cartId, { include: 'items' })
-    .then(cart => {
+  getCart: async (req, res) => {
+    await Cart.findByPk(req.session.cartId, { include: 'items' }).then(cart => {
       cart = cart || { items: [] }
       let totalPrice = cart.items.length > 0 ? cart.items.map(d => d.price * d.CartItem.quantity).reduce((a, b) => a + b) : 0
       return res.render('cart', {
@@ -16,8 +15,8 @@ let cartController = {
       })
     })
   },
-  postCart: (req, res) => {
-    return Cart.findOrCreate({
+  postCart:async (req, res) => {
+    await Cart.findOrCreate({
       where: {
         id: req.session.cartId || 0,
       },
