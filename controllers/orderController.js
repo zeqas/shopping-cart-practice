@@ -38,6 +38,15 @@ function create_mpg_aes_encrypt(TradeInfo) {
   return enc + encrypt.final("hex");
 }
 
+function create_mpg_aes_decrypt(TradeInfo) {
+  let decrypt = crypto.createDecipheriv("aes256", HashKey, HashIV);
+  decrypt.setAutoPadding(false);
+  let text = decrypt.update(TradeInfo, "hex", "utf8");
+  let plainText = text + decrypt.final("utf8");
+  let result = plainText.replace(/[\x00-\x20]+/g, "");
+  return result;
+}
+
 function create_mpg_sha_encrypt(TradeInfo) {
 
   let sha = crypto.createHash("sha256");
@@ -165,7 +174,12 @@ let orderController = {
 
     return Order.findByPk(req.params.id, {}).then(order => {
       const tradeInfo = getTradeInfo(order.amount, '產品名稱', `${USER_EMAIL}`)
-      return res.render('payment', { order, tradeInfo })
+      order.update({
+        ...req.body,
+        sn: tradeInfo.MerchantOrderNo,
+      }).then(order => {
+        res.render('payment', { order, tradeInfo })
+      })
     })
   },
   newebpayCallback: (req, res) => {
@@ -175,7 +189,22 @@ let orderController = {
     console.log(req.body)
     console.log('==========')
 
-    return res.redirect('/orders')
+    console.log('===== newebpayCallback: TradeInfo =====')
+    console.log(req.body.TradeInfo)
+
+    const data = JSON.parse(create_mpg_aes_decrypt(req.body.TradeInfo))
+
+    console.log('===== newebpayCallback: create_mpg_aes_decrypt、data =====')
+    console.log(data)
+
+    return Order.findAll({ where: { sn: data['Result']['MerchantOrderNo'] } }).then(orders => {
+      orders[0].update({
+        ...req.body,
+        payment_status: 1,
+      }).then(order => {
+        return res.redirect('/orders')
+      })
+    })
   }
 }
 
