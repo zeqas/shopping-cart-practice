@@ -1,0 +1,2 @@
+// 使用者信箱
+USER_EMAIL = process.env.USER_EMAIL
