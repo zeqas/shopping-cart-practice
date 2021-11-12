@@ -6,7 +6,7 @@ const cartController = require('../controllers/cartController.js')
 const orderController = require('../controllers/orderController.js')
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
@@ -21,5 +21,8 @@ router.delete('/cartItem/:id', cartController.deleteCartItem)
 router.get('/orders', orderController.getOrders)
 router.post('/order', orderController.postOrder)
 router.post('/order/:id/cancel', orderController.cancelOrder)
+
+router.get('/order/:id/payment', orderController.getPayment)
+router.post('/newebpay/callback', orderController.newebpayCallback)
 
 module.exports = router;
