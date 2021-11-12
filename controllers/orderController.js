@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const crypto = require("crypto")
 const nodemailer = require('nodemailer')
 const db = require('../models')
@@ -15,10 +17,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const URL = ''
-const MerchantID = ''
-const HashKey = ''
-const HashIV = ''
+const URL = process.env.URL
+const MerchantID = process.env.MERCHANT_ID
+const HashKey = process.env.HASH_KEY
+const HashIV = process.env.HASH_IV
 const PayGateWay = "https://ccore.newebpay.com/MPG/mpg_gateway"
 const ReturnURL = URL + "/newebpay/callback?from=ReturnURL"
 const NotifyURL = URL + "/newebpay/callback?from=NotifyURL"
