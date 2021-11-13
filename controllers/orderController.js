@@ -69,7 +69,7 @@ function getTradeInfo(Amt, Desc, email) {
     'TimeStamp': Date.now(), // 時間戳記
     'Version': 1.5, // 串接程式版本
     'MerchantOrderNo': Date.now(), // 商店訂單編號
-    'LoginType': 0, // 智付通會員
+    'LoginType': 0, // 藍新金流會員
     'OrderComment': 'OrderComment', // 商店備註
     'Amt': Amt, // 訂單金額
     'ItemDesc': Desc, // 產品名稱

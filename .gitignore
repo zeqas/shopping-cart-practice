@@ -1,4 +1,6 @@
 .env
+ngrok.exe
+desktop.ini
 
 .DS_Store
 *.DS_Store
